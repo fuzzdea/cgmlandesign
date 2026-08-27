@@ -238,7 +238,7 @@ export default function App() {
       </div>
       <div className="hero-visual" data-reveal>
         <img src={hero.src} alt={hero.title}/>
-        <div className="image-tag"><span>01</span><p>{hero.title}<br/><small>{hero.detail}</small></p></div>
+        <div className="image-tag"><span>01</span><p>{hero.title}</p></div>
       </div>
     </section>
 
@@ -258,11 +258,11 @@ export default function App() {
         {visible.map((project, index) =>
           <button className="project-card" data-reveal key={project.id} onClick={() => setModal(index)} aria-label={`${t.view}: ${project.title}`}>
             <div className="project-image">
-              <img loading="lazy" decoding="async" src={project.src} alt={`${project.title} — ${project.detail}`}/>
+              <img loading="lazy" decoding="async" src={project.src} alt={project.title}/>
               <span>↗</span>
             </div>
             <div className="project-meta">
-              <p>{project.title}</p><small>{project.detail}</small><b>{String(project.id).padStart(4, '0')}</b>
+              <p>{project.title}</p><b>{String(project.id).padStart(4, '0')}</b>
             </div>
           </button>
         )}
@@ -314,11 +314,11 @@ export default function App() {
     </footer>
 
     {modalProject && <div className="lightbox" role="dialog" aria-modal="true" aria-label={modalProject.title} onClick={() => setModal(null)} onTouchStart={(event) => { touchStart.current = event.changedTouches[0].clientX; }} onTouchEnd={(event) => { const distance = event.changedTouches[0].clientX - touchStart.current; if (Math.abs(distance) > 55) go(distance < 0 ? 1 : -1); }}>
-      <div className="lightbox-top"><p>{modalProject.title}<span>{modalProject.detail}</span></p><small>{t.keyboard}</small><button className="lightbox-close" onClick={() => setModal(null)} aria-label={t.close}>×</button></div>
+      <div className="lightbox-top"><p>{modalProject.title}</p><small>{t.keyboard}</small><button className="lightbox-close" onClick={() => setModal(null)} aria-label={t.close}>×</button></div>
       <button className="lightbox-nav prev" onClick={(event) => { event.stopPropagation(); go(-1); }} aria-label={t.previous}>←</button>
       <figure key={modalProject.src} onClick={(event) => event.stopPropagation()}>
-        <img src={modalProject.src} alt={`${modalProject.title} — ${modalProject.detail}`}/>
-        <figcaption><strong>{modalProject.title}</strong><span>{modalProject.detail}</span><small>{String((modal || 0) + 1).padStart(4, '0')} / {String(filtered.length).padStart(4, '0')}</small></figcaption>
+        <img src={modalProject.src} alt={modalProject.title}/>
+        <figcaption><strong>{modalProject.title}</strong><small>{String((modal || 0) + 1).padStart(4, '0')} / {String(filtered.length).padStart(4, '0')}</small></figcaption>
       </figure>
       <button className="lightbox-nav next" onClick={(event) => { event.stopPropagation(); go(1); }} aria-label={t.next}>→</button>
       <div className="lightbox-progress"><span style={{ width: `${(((modal || 0) + 1) / filtered.length) * 100}%` }}/></div>
