@@ -5,7 +5,7 @@ import portfolioData from './portfolio.json';
 type Lang = 'es' | 'en';
 type Category = 'all' | 'landscape' | 'masterplan' | 'archive';
 type Project = { id: number; src: string; title: string; detail: string; category: Exclude<Category, 'all'> };
-const portfolio = portfolioData as Project[];
+const portfolio = [...(portfolioData as Project[])].sort((a, b) => b.id - a.id);
 const categories: Category[] = ['all', 'landscape', 'masterplan', 'archive'];
 
 const words = {
