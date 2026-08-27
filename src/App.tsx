@@ -186,7 +186,7 @@ export default function App() {
         <div className="experience"><strong>45+</strong><span>{t.years}</span></div>
       </div>
       <div className="hero-visual" data-reveal>
-        <img src="/gallery/0410-elviria-hills-1.png" alt="Elviria Hills"/>
+        <img src="/brand/hero-elviria.png" alt="Elviria Hills"/>
         <div className="image-tag"><span>01</span><p>Elviria Hills</p></div>
       </div>
     </section>
