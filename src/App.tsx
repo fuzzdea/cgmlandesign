@@ -1,20 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import portfolioData from './portfolio.json';
+import { useEffect, useState } from 'react';
+import MotionEnhancements from './MotionEnhancements';
 
 type Lang = 'es' | 'en';
-type Category = 'all' | 'landscape' | 'masterplan' | 'archive';
-type Project = {
-  id: number;
-  src: string;
-  title: string;
-  detail: string;
-  category: Exclude<Category, 'all'>;
-  originalWidth: number;
-  originalHeight: number;
-};
-
-const portfolio = portfolioData as Project[];
-const categories: Category[] = ['all', 'landscape', 'masterplan', 'archive'];
 
 const copy = {
   es: {
@@ -148,19 +135,8 @@ const copy = {
 export default function App() {
   const [lang, setLang] = useState<Lang>(() => (localStorage.getItem('cgm-lang') as Lang) || 'es');
   const [dark, setDark] = useState(() => localStorage.getItem('cgm-theme') === 'dark');
-  const [filter, setFilter] = useState<Category>('all');
-  const [limit, setLimit] = useState(24);
-  const [modal, setModal] = useState<number | null>(null);
   const [menu, setMenu] = useState(false);
-  const touchStart = useRef(0);
   const t = copy[lang];
-
-  const filtered = useMemo(
-    () => portfolio.filter((project) => filter === 'all' || project.category === filter),
-    [filter],
-  );
-  const visible = filtered.slice(0, limit);
-  const hero = portfolio.find((item) => item.title.toUpperCase() === 'ELVIRIA HILLS' && item.detail === '1') || portfolio[0];
 
   useEffect(() => {
     document.documentElement.dataset.theme = dark ? 'dark' : 'light';
@@ -177,46 +153,19 @@ export default function App() {
     const elements = document.querySelectorAll('[data-reveal]');
     elements.forEach((element) => observer.observe(element));
     return () => observer.disconnect();
-  }, [limit, filter, lang]);
+  }, [lang]);
 
-  useEffect(() => {
-    if (modal === null) return;
-    const current = filtered[modal];
-    const next = filtered[(modal + 1) % filtered.length];
-    const previous = filtered[(modal - 1 + filtered.length) % filtered.length];
-    [current, next, previous].forEach((item) => { if (item) new Image().src = item.src; });
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setModal(null);
-      if (event.key === 'ArrowRight') setModal((modal + 1) % filtered.length);
-      if (event.key === 'ArrowLeft') setModal((modal - 1 + filtered.length) % filtered.length);
-    };
-    document.body.classList.add('modal-open');
-    window.addEventListener('keydown', onKey);
-    return () => {
-      document.body.classList.remove('modal-open');
-      window.removeEventListener('keydown', onKey);
-    };
-  }, [modal, filtered]);
-
-  const selectFilter = (category: Category) => {
-    setFilter(category);
-    setLimit(24);
-    setModal(null);
-  };
-  const go = (step: number) => setModal(modal === null ? null : (modal + step + filtered.length) % filtered.length);
   const closeMenu = () => setMenu(false);
-  const modalProject = modal === null ? null : filtered[modal];
 
   return <main>
+    <MotionEnhancements/>
     <header className="nav shell" id="inicio">
       <a className="brand" href="#inicio" aria-label="CGM Landesign" onClick={closeMenu}>
         <img src="/brand/logo-original.png" alt=""/>
         <span><strong>CGM</strong><small>LANDESIGN</small></span>
       </a>
       <nav className={menu ? 'open' : ''} aria-label={lang === 'es' ? 'Navegación principal' : 'Main navigation'}>
-        {['proyectos', 'carlos', 'servicios', 'contacto'].map((id, index) =>
-          <a key={id} href={`#${id}`} onClick={closeMenu}>{t.nav[index]}</a>
-        )}
+        <a href="/portfolio" onClick={closeMenu}>{t.nav[0]}</a><a href="#carlos" onClick={closeMenu}>{t.nav[1]}</a><a href="#servicios" onClick={closeMenu}>{t.nav[2]}</a><a href="#contacto" onClick={closeMenu}>{t.nav[3]}</a>
       </nav>
       <div className="nav-actions">
         <button onClick={() => setLang(lang === 'es' ? 'en' : 'es')} aria-label="Change language">{lang === 'es' ? 'EN' : 'ES'}</button>
@@ -231,46 +180,24 @@ export default function App() {
         <h1>{t.headline}</h1>
         <p className="lead">{t.lead}</p>
         <div className="hero-actions">
-          <a className="button primary" href="#proyectos">{t.explore}<span>↗</span></a>
+          <a className="button primary magnetic" href="/portfolio">{t.explore}<span>↗</span></a>
           <a className="text-link" href="#carlos">{t.meet}<span>→</span></a>
         </div>
         <div className="experience"><strong>45+</strong><span>{t.years}</span></div>
       </div>
       <div className="hero-visual" data-reveal>
-        <img src={hero.src} alt={hero.title}/>
-        <div className="image-tag"><span>01</span><p>{hero.title}</p></div>
+        <img src="/gallery/0410-elviria-hills-1.png" alt="Elviria Hills"/>
+        <div className="image-tag"><span>01</span><p>Elviria Hills</p></div>
       </div>
     </section>
 
     <section className="manifesto"><div className="shell" data-reveal><span className="ginkgo">❧</span><blockquote>{t.manifesto}</blockquote><span className="manifesto-line"/></div></section>
 
-    <section className="projects-section shell" id="proyectos">
-      <div className="section-heading" data-reveal>
-        <div><p className="eyebrow">{t.selected}</p><h2>{t.projects}</h2></div>
-        <p className="project-count">{portfolio.length.toLocaleString()}<span> PNG</span></p>
-      </div>
-      <div className="filters" role="group" aria-label="Project filters">
-        {categories.map((category, index) =>
-          <button className={filter === category ? 'active' : ''} onClick={() => selectFilter(category)} key={category}>{t.filters[index]}</button>
-        )}
-      </div>
-      <div className="project-grid">
-        {visible.map((project, index) =>
-          <button className="project-card" data-reveal key={project.id} onClick={() => setModal(index)} aria-label={`${t.view}: ${project.title}`}>
-            <div className="project-image">
-              <img loading="lazy" decoding="async" src={project.src} alt={project.title}/>
-              <span>↗</span>
-            </div>
-            <div className="project-meta">
-              <p>{project.title}</p><b>{String(project.id).padStart(4, '0')}</b>
-            </div>
-          </button>
-        )}
-      </div>
-      <div className="load-more" data-reveal>
-        <p>{Math.min(limit, filtered.length).toLocaleString()} / {filtered.length.toLocaleString()} {t.shown}</p>
-        {limit < filtered.length && <button className="button outline" onClick={() => setLimit(limit + 24)}>{t.loadMore}<span>＋</span></button>}
-      </div>
+    <div className="motion-marquee" aria-hidden="true"><div><span>PAISAJISMO</span><i>✦</i><span>ARQUITECTURA</span><i>✦</i><span>URBANISMO</span><i>✦</i><span>GOLF & RESORTS</span><i>✦</i><span>PAISAJISMO</span><i>✦</i><span>ARQUITECTURA</span><i>✦</i><span>URBANISMO</span><i>✦</i></div></div>
+
+    <section className="portfolio-teaser shell" id="proyectos">
+      <div className="teaser-heading" data-reveal><p className="eyebrow">{lang === 'es' ? 'PORTAFOLIO DE PROYECTOS' : 'PROJECT PORTFOLIO'}</p><h2>{lang === 'es' ? 'Una selección de paisajes construidos a través del tiempo.' : 'A selection of landscapes shaped over time.'}</h2><a className="button outline" href="/portfolio">{lang === 'es' ? 'Ver portafolio completo' : 'View full portfolio'}<span>↗</span></a></div>
+      <div className="teaser-collage" data-reveal><a href="/portfolio"><img loading="lazy" src="/gallery/0410-elviria-hills-1.png" alt="Elviria Hills"/><span>Elviria Hills</span></a><a href="/portfolio"><img loading="lazy" src="/gallery/0030-el-deseo-san-miguel-de-allende-mexico-02-master-plan-3d.png" alt="El Deseo"/><span>El Deseo</span></a><a href="/portfolio"><img loading="lazy" src="/gallery/0848-rio-real-playa-20.png" alt="Río Real Playa"/><span>Río Real Playa</span></a></div>
     </section>
 
     <section className="profile-section" id="perfil">
@@ -313,15 +240,5 @@ export default function App() {
       <div className="shell footer-bottom"><span>© {new Date().getFullYear()} CGM Landesign. {t.rights}</span><span>with <b>♥</b> by <a href="https://fuzzdea.com/" target="_blank" rel="noreferrer">fuzzdea</a></span></div>
     </footer>
 
-    {modalProject && <div className="lightbox" role="dialog" aria-modal="true" aria-label={modalProject.title} onClick={() => setModal(null)} onTouchStart={(event) => { touchStart.current = event.changedTouches[0].clientX; }} onTouchEnd={(event) => { const distance = event.changedTouches[0].clientX - touchStart.current; if (Math.abs(distance) > 55) go(distance < 0 ? 1 : -1); }}>
-      <div className="lightbox-top"><p>{modalProject.title}</p><small>{t.keyboard}</small><button className="lightbox-close" onClick={() => setModal(null)} aria-label={t.close}>×</button></div>
-      <button className="lightbox-nav prev" onClick={(event) => { event.stopPropagation(); go(-1); }} aria-label={t.previous}>←</button>
-      <figure key={modalProject.src} onClick={(event) => event.stopPropagation()}>
-        <img src={modalProject.src} alt={modalProject.title}/>
-        <figcaption><strong>{modalProject.title}</strong><small>{String((modal || 0) + 1).padStart(4, '0')} / {String(filtered.length).padStart(4, '0')}</small></figcaption>
-      </figure>
-      <button className="lightbox-nav next" onClick={(event) => { event.stopPropagation(); go(1); }} aria-label={t.next}>→</button>
-      <div className="lightbox-progress"><span style={{ width: `${(((modal || 0) + 1) / filtered.length) * 100}%` }}/></div>
-    </div>}
   </main>;
 }
