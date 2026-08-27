@@ -275,7 +275,7 @@ export default function App() {
 
     <section className="profile-section" id="perfil">
       <div className="shell profile-grid">
-        <div className="profile-image" data-reveal><img loading="lazy" src="/brand/profile-card.png" alt="Carlos González Mora trabajando en un proyecto paisajístico"/><span>+45</span></div>
+        <div className="profile-image portrait" data-reveal><img loading="lazy" src="/brand/carlos-gonzalez-mora.png" alt="Retrato de Carlos Alfonso González Mora"/><span>+45</span><a className="portrait-instagram" href="https://www.instagram.com/cgm.landesign/p/CbK1L-ztwjg/" target="_blank" rel="noreferrer">Instagram ↗</a></div>
         <div className="profile-copy" data-reveal>
           <p className="eyebrow">{t.profileLabel}</p><h2>{t.profileTitle}</h2><p className="profile-intro">{t.profileBody}</p>
           <a className="text-link profile-link" href="#carlos">{t.profileCta}<span>↓</span></a>
