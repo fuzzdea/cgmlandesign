@@ -147,7 +147,7 @@ export default function PortfolioPage() {
       <section className="portfolio-hero">
         <div className="portfolio-cover" aria-hidden="true"><img src={cover.src} alt=""/></div>
         <div className="shell portfolio-hero-content" data-reveal><p className="eyebrow">{t.label}</p><h1>{t.title}</h1><div><p>{t.intro}</p><strong>{projects.length.toLocaleString()}<small> {t.projects}</small></strong></div></div>
-        <span className="portfolio-orbit" aria-hidden="true"/>
+        <span className="portfolio-orbit" aria-hidden="true"><img src="/brand/logo-original.png" alt=""/></span>
       </section>
       <div className="motion-marquee" aria-hidden="true"><div><span>PAISAJISMO</span><i>✦</i><span>ARQUITECTURA</span><i>✦</i><span>URBANISMO</span><i>✦</i><span>GOLF & RESORTS</span><i>✦</i><span>PAISAJISMO</span><i>✦</i><span>ARQUITECTURA</span><i>✦</i><span>URBANISMO</span><i>✦</i></div></div>
       <section className="projects-section shell portfolio-directory" id="project-directory">

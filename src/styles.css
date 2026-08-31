@@ -48,3 +48,6 @@ footer{background:#0c100c;color:#dde3db;padding:60px 0 26px}.footer-top{display:
 @media(prefers-reduced-motion:reduce){.project-folder-card[data-reveal] .project-folder-cover{clip-path:none}.project-detail-cover img{transform:none}}
 .portfolio-back:is(button){border:0;font-family:inherit;cursor:pointer}.profile-image.portrait img[src*="2026"]{object-position:center 44%;filter:saturate(.92) contrast(1.02)}
 @media(max-width:900px){.portfolio-page .portfolio-back{display:inline-flex;align-items:center;left:14px;bottom:14px;max-width:calc(100% - 28px)}}
+.portfolio-orbit:after{display:none}.portfolio-orbit>img{position:absolute;inset:42px;width:calc(100% - 84px);height:calc(100% - 84px);object-fit:cover;border-radius:50%;mix-blend-mode:screen;filter:saturate(1.18) drop-shadow(0 0 18px rgba(157,204,54,.22));animation:ginkgoFloat 5s ease-in-out infinite}@keyframes ginkgoFloat{0%,100%{transform:rotate(-3deg) scale(.96)}50%{transform:rotate(3deg) scale(1.02)}}
+@media(max-width:900px){.portfolio-orbit>img{inset:30px;width:calc(100% - 60px);height:calc(100% - 60px)}}
+@media(prefers-reduced-motion:reduce){.portfolio-orbit>img{animation:none}}
