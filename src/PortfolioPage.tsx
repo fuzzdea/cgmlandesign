@@ -32,7 +32,7 @@ const words = {
     intro: 'Selecciona un proyecto para recorrer únicamente sus imágenes y conocer la experiencia de CGM Landesign en trabajos de escala similar.',
     filters: ['Todos', 'Paisajismo', 'Master plans', 'Otros proyectos'], categoryNames: { landscape: 'Paisajismo', masterplan: 'Master plan', archive: 'Otros proyectos' },
     search: 'Buscar un proyecto — La Trinidad, La Cala Golf…', clear: 'Limpiar búsqueda', more: 'Mostrar más proyectos', shown: 'proyectos visibles', projects: 'proyectos', photos: 'imágenes',
-    open: 'Abrir proyecto', empty: 'No encontramos proyectos con ese nombre.', backProjects: 'Volver a todos los proyectos', view: 'Ver imagen', close: 'Cerrar imagen', previous: 'Anterior', next: 'Siguiente',
+    open: 'Abrir proyecto', empty: 'No encontramos proyectos con ese nombre.', backProjects: 'Volver a todos los proyectos', backCategory: { landscape: 'Volver a Paisajismo', masterplan: 'Volver a Master plans', archive: 'Volver a Otros proyectos' }, view: 'Ver imagen', close: 'Cerrar imagen', previous: 'Anterior', next: 'Siguiente',
     keyboard: 'Flechas para navegar · ESC para cerrar', back: 'Volver al inicio', rights: 'Todos los derechos reservados.',
   },
   en: {
@@ -40,7 +40,7 @@ const words = {
     intro: 'Choose a project to browse only its images and discover CGM Landesign’s experience in work of a similar scale.',
     filters: ['All', 'Landscape', 'Master plans', 'Other projects'], categoryNames: { landscape: 'Landscape', masterplan: 'Master plan', archive: 'Other projects' },
     search: 'Search a project — La Trinidad, La Cala Golf…', clear: 'Clear search', more: 'Show more projects', shown: 'projects visible', projects: 'projects', photos: 'images',
-    open: 'Open project', empty: 'We could not find a project with that name.', backProjects: 'Back to all projects', view: 'View image', close: 'Close image', previous: 'Previous', next: 'Next',
+    open: 'Open project', empty: 'We could not find a project with that name.', backProjects: 'Back to all projects', backCategory: { landscape: 'Back to Landscape', masterplan: 'Back to Master plans', archive: 'Back to Other projects' }, view: 'View image', close: 'Close image', previous: 'Previous', next: 'Next',
     keyboard: 'Arrow keys to navigate · ESC to close', back: 'Back to home', rights: 'All rights reserved.',
   },
 };
@@ -109,13 +109,16 @@ export default function PortfolioPage() {
     setModal(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-  const closeProject = () => {
+  const showProjectList = (nextFilter: Category) => {
     const url = new URL(window.location.href);
     url.searchParams.delete('project');
     window.history.pushState({}, '', `${url.pathname}${url.search}`);
+    setFilter(nextFilter);
+    setSearch('');
+    setLimit(24);
     setSelectedSlug(null);
     setModal(null);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.setTimeout(() => document.getElementById('project-directory')?.scrollIntoView({ behavior: 'smooth' }), 0);
   };
   const go = (step: number) => setModal(modal === null ? null : (modal + step + activeImages.length) % activeImages.length);
 
@@ -131,7 +134,7 @@ export default function PortfolioPage() {
       <section className="project-detail-hero">
         <div className="project-detail-cover" aria-hidden="true"><img src={selectedProject.cover.src} alt=""/></div>
         <div className="shell project-detail-heading" data-reveal>
-          <button className="project-detail-back" onClick={closeProject}>← {t.backProjects}</button>
+          <button className="project-detail-back" onClick={() => showProjectList('all')}>← {t.backProjects}</button>
           <p className="eyebrow">{t.categoryNames[selectedProject.category]}</p>
           <h1>{selectedProject.title}</h1>
           <div className="project-detail-summary"><span>{String(selectedProject.images.length).padStart(2, '0')}</span><p>{t.photos}<br/>CGM Landesign</p></div>
@@ -147,7 +150,7 @@ export default function PortfolioPage() {
         <span className="portfolio-orbit" aria-hidden="true"/>
       </section>
       <div className="motion-marquee" aria-hidden="true"><div><span>PAISAJISMO</span><i>✦</i><span>ARQUITECTURA</span><i>✦</i><span>URBANISMO</span><i>✦</i><span>GOLF & RESORTS</span><i>✦</i><span>PAISAJISMO</span><i>✦</i><span>ARQUITECTURA</span><i>✦</i><span>URBANISMO</span><i>✦</i></div></div>
-      <section className="projects-section shell portfolio-directory">
+      <section className="projects-section shell portfolio-directory" id="project-directory">
         <div className="portfolio-tools" data-reveal>
           <div className="filters" role="group">{categories.map((category, index) => <button className={filter === category ? 'active' : ''} onClick={() => { setFilter(category); setLimit(24); }} key={category}>{t.filters[index]}</button>)}</div>
           <label className="project-search"><span aria-hidden="true">⌕</span><input value={search} onChange={(event) => { setSearch(event.target.value); setLimit(24); }} placeholder={t.search} aria-label={t.search}/>{search && <button onClick={() => setSearch('')} aria-label={t.clear}>×</button>}</label>
@@ -160,7 +163,7 @@ export default function PortfolioPage() {
       </section>
     </>}
 
-    <a className="portfolio-back" href="/">← {t.back}</a>
+    {selectedProject ? <button className="portfolio-back" onClick={() => showProjectList(selectedProject.category)}>← {t.backCategory[selectedProject.category]}</button> : <a className="portfolio-back" href="/">← {t.back}</a>}
     <footer><div className="shell footer-top"><a className="footer-brand" href="/">CGM<small>LANDESIGN</small></a><div><a href="https://www.instagram.com/cgm.landesign/" target="_blank" rel="noreferrer">Instagram ↗</a><a href="https://www.linkedin.com/in/carlos-a-gonzalez-mora-41266b28/" target="_blank" rel="noreferrer">LinkedIn ↗</a></div><a href="https://cgmlandesign.com">cgmlandesign.com</a></div><div className="shell footer-bottom"><span>© {new Date().getFullYear()} CGM Landesign. {t.rights}</span><span>with <b>♥</b> by <a href="https://fuzzdea.com/" target="_blank" rel="noreferrer">fuzzdea</a></span></div></footer>
 
     {modalImage && selectedProject && <div className="lightbox" role="dialog" aria-modal="true" aria-label={selectedProject.title} onClick={() => setModal(null)} onTouchStart={(event) => { touchStart.current = event.changedTouches[0].clientX; }} onTouchEnd={(event) => { const distance = event.changedTouches[0].clientX - touchStart.current; if (Math.abs(distance) > 55) go(distance < 0 ? 1 : -1); }}><div className="lightbox-top"><p>{selectedProject.title}</p><small>{t.keyboard}</small><button className="lightbox-close" onClick={() => setModal(null)} aria-label={t.close}>×</button></div><button className="lightbox-nav prev" onClick={(event) => { event.stopPropagation(); go(-1); }} aria-label={t.previous}>←</button><figure key={modalImage.src} onClick={(event) => event.stopPropagation()}><img src={modalImage.src} alt={`${selectedProject.title} ${(modal || 0) + 1}`}/><figcaption><strong>{selectedProject.title}</strong><small>{String((modal || 0) + 1).padStart(2, '0')} / {String(activeImages.length).padStart(2, '0')}</small></figcaption></figure><button className="lightbox-nav next" onClick={(event) => { event.stopPropagation(); go(1); }} aria-label={t.next}>→</button><div className="lightbox-progress"><span style={{ width: `${(((modal || 0) + 1) / activeImages.length) * 100}%` }}/></div></div>}
