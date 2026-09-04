@@ -186,7 +186,7 @@ export default function App() {
         <div className="experience"><strong>45+</strong><span>{t.years}</span></div>
       </div>
       <div className="hero-visual" data-reveal>
-        <img src="/brand/hero-elviria.png" alt="Elviria Hills"/>
+        <img src="/brand/hero-elviria.webp" alt="Elviria Hills"/>
         <div className="image-tag"><span>01</span><p>Elviria Hills</p></div>
       </div>
     </section>
@@ -197,12 +197,12 @@ export default function App() {
 
     <section className="portfolio-teaser shell" id="proyectos">
       <div className="teaser-heading" data-reveal><p className="eyebrow">{lang === 'es' ? 'PORTAFOLIO DE PROYECTOS' : 'PROJECT PORTFOLIO'}</p><h2>{lang === 'es' ? 'Una selección de paisajes construidos a través del tiempo.' : 'A selection of landscapes shaped over time.'}</h2><a className="button outline" href="/portfolio">{lang === 'es' ? 'Ver portafolio completo' : 'View full portfolio'}<span>↗</span></a></div>
-      <div className="teaser-collage" data-reveal><a href="/portfolio"><img loading="lazy" src="/gallery/0410-elviria-hills-1.png" alt="Elviria Hills"/><span>Elviria Hills</span></a><a href="/portfolio"><img loading="lazy" src="/gallery/0030-el-deseo-san-miguel-de-allende-mexico-02-master-plan-3d.png" alt="El Deseo"/><span>El Deseo</span></a><a href="/portfolio"><img loading="lazy" src="/gallery/0848-rio-real-playa-20.png" alt="Río Real Playa"/><span>Río Real Playa</span></a></div>
+      <div className="teaser-collage" data-reveal><a href="/portfolio"><img loading="lazy" src="/gallery/0410-elviria-hills-1.webp" alt="Elviria Hills"/><span>Elviria Hills</span></a><a href="/portfolio"><img loading="lazy" src="/gallery/0030-el-deseo-san-miguel-de-allende-mexico-02-master-plan-3d.webp" alt="El Deseo"/><span>El Deseo</span></a><a href="/portfolio"><img loading="lazy" src="/gallery/0848-rio-real-playa-20.webp" alt="Río Real Playa"/><span>Río Real Playa</span></a></div>
     </section>
 
     <section className="profile-section" id="perfil">
       <div className="shell profile-grid">
-        <div className="profile-image portrait" data-reveal><img loading="lazy" src="/brand/carlos-gonzalez-mora-2026.png" alt="Retrato actual de Carlos Alfonso González Mora"/><span>+45</span><a className="portrait-instagram" href="https://www.instagram.com/cgm.landesign/" target="_blank" rel="noreferrer">Instagram ↗</a></div>
+        <div className="profile-image portrait" data-reveal><img loading="lazy" src="/brand/carlos-gonzalez-mora-2026.webp" alt="Retrato actual de Carlos Alfonso González Mora"/><span>+45</span><a className="portrait-instagram" href="https://www.instagram.com/cgm.landesign/" target="_blank" rel="noreferrer">Instagram ↗</a></div>
         <div className="profile-copy" data-reveal>
           <p className="eyebrow">{t.profileLabel}</p><h2>{t.profileTitle}</h2><p className="profile-intro">{t.profileBody}</p>
           <a className="text-link profile-link" href="#carlos">{t.profileCta}<span>↓</span></a>

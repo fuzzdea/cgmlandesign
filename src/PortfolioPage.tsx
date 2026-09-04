@@ -1,29 +1,21 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import MotionEnhancements from './MotionEnhancements';
-import portfolioData from './portfolio.json';
+import projectData from './projects.json';
 
 type Lang = 'es' | 'en';
 type Category = 'all' | 'landscape' | 'masterplan' | 'archive';
 type PortfolioCategory = Exclude<Category, 'all'>;
-type PortfolioImage = { id: number; src: string; title: string; detail: string; category: PortfolioCategory; originalWidth?: number; originalHeight?: number };
+type PortfolioImage = { id: number; src: string; originalWidth?: number; originalHeight?: number };
+type ProjectSource = { title: string; category: PortfolioCategory; images: PortfolioImage[] };
 type ProjectGroup = { slug: string; title: string; category: PortfolioCategory; images: PortfolioImage[]; cover: PortfolioImage };
 
 const categories: Category[] = ['all', 'landscape', 'masterplan', 'archive'];
-const images = portfolioData as PortfolioImage[];
 const normalize = (value: string) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 const slugify = (value: string) => normalize(value).replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-const projects = Array.from(images.reduce((groups, image) => {
-  const key = `${image.category}::${image.title}`;
-  const group = groups.get(key) || [];
-  group.push(image);
-  groups.set(key, group);
-  return groups;
-}, new Map<string, PortfolioImage[]>())).map(([key, projectImages]) => ({
-  slug: slugify(key),
-  title: projectImages[0].title,
-  category: projectImages[0].category,
-  images: projectImages,
-  cover: projectImages.find((image) => (image.originalWidth || 0) >= (image.originalHeight || 0)) || projectImages[0],
+const projects = (projectData as ProjectSource[]).map((project) => ({
+  ...project,
+  slug: slugify(`${project.category}::${project.title}`),
+  cover: project.images.find((image) => (image.originalWidth || 0) >= (image.originalHeight || 0)) || project.images[0],
 })).sort((a, b) => a.title.localeCompare(b.title, 'es')) as ProjectGroup[];
 
 const words = {
